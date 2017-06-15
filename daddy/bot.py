@@ -20,7 +20,7 @@ class MongoBot(commands.Bot):
         return cmd
 
     async def get_user(self, user_id, guild_id):
-        user = None
+        user = {}
         try:
             user = await self.db.data.find_one({"user_id": int(user_id), "guild_id": int(guild_id)})
         except Exception as e:

@@ -10,6 +10,16 @@ class FMK():
     def __init__(self, bot):
         self.bot = bot
 
+    @staticmethod
+    def fmk_error(fuck, marry, kill):
+        if fuck and kill and fuck == kill:
+            return "You cannot fuck a corpse, you degenerate."
+        if fuck and marry and fuck == marry:
+            return "You're already married to them."
+        if marry and kill and marry == kill:
+            return "You cannot be married to a corpse."
+        return None
+
     @commands.group(pass_context=True, no_pm=True, invoke_without_command=True)
     async def fmk(self, ctx, member:discord.Member=None):
         if ctx.invoked_subcommand:
@@ -32,17 +42,35 @@ class FMK():
     @utils.cmd_error_handler
     @fmk.command(pass_context=True, invoke_without_command=True)
     async def fuck(self, ctx, member:discord.Member):
-        await self,bot.set_user(ctx.message.author.id, ctx.message.server.id, fuck=int(member.id))
+        user_id, guild_id = ctx.message.author.id, ctx.message.server.id
+        user = await self.bot.get_user(user_id, guild_id)
+        msg = self.fmk_error(int(member.id), user.get("marry", None), user.get("kill", None))
+        if msg:
+            await self.bot.say(msg)
+        else:
+            await self,bot.set_user(ctx.message.author.id, ctx.message.server.id, fuck=int(member.id))
 
     @utils.cmd_error_handler
     @fmk.command(pass_context=True)
     async def marry(self, ctx, member:discord.Member):
-        await self.bot.set_user(ctx.message.author.id, ctx.message.server.id, marry=int(member.id))
+        user_id, guild_id = ctx.message.author.id, ctx.message.server.id
+        user = await self.bot.get_user(user_id, guild_id)
+        msg = self.fmk_error(user.get("fuck", None), int(member.id), user.get("kill", None))
+        if msg:
+            await self.bot.say(msg)
+        else:
+            await self.bot.set_user(ctx.message.author.id, ctx.message.server.id, marry=int(member.id))
 
     @utils.cmd_error_handler
     @fmk.command(pass_context=True)
     async def kill(self, ctx, member:discord.Member):
-        await self.bot.set_user(ctx.message.author.id, ctx.message.server.id, kill=int(member.id))
+        user_id, guild_id = ctx.message.author.id, ctx.message.server.id
+        user = await self.bot.get_user(user_id, guild_id)
+        msg = self.fmk_error(user.get("fuck", None), user.get("marry", None), int(member.id))
+        if msg:
+            await self.bot.say(msg)
+        else:
+            await self.bot.set_user(ctx.message.author.id, ctx.message.server.id, kill=int(member.id))
 
 def setup(bot):
     bot.add_cog(FMK(bot))
