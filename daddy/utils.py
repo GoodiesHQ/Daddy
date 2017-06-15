@@ -1,7 +1,24 @@
 from argparse import ArgumentTypeError
 from discord.ext import commands
+import aiohttp
+import asyncio
 import functools
 import os
+
+async def http_get(url, lock=None, timeout=5.0, loop=None):
+    loop = loop or asyncio.get_event_loop()
+    lock = lock or asyncio.Lock(loop=loop)
+    async with lock:
+        async with aiohttp.ClientSession(loop=loop) as client:
+            async with client.get(url, timeout=timeout) as req:
+                text = await req.text()
+                status = req.status
+    return status, text
+
+async def http_multiget(*urls, conns=10, timeout=5.0, loop=None):
+    loop = loop or asyncio.get_event_loop()
+    lock = asyncio.BoundedSemaphore(loop=loop)
+    return await asyncio.gather(*[http_get(url, lock, timeout, loop) for url in urls])
 
 class BlackHole:
     def __init__(self, msg=""):
