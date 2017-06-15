@@ -49,6 +49,7 @@ class FMK():
             await self.bot.say(msg)
         else:
             await self.bot.set_user(user_id, guild_id, fuck=int(member.id))
+            await self.bot.say("{} you'd fuck {}".format(ctx.message.author.mention, member.display_name))
 
     @utils.cmd_error_handler
     @fmk.command(pass_context=True)
@@ -60,6 +61,7 @@ class FMK():
             await self.bot.say(msg)
         else:
             await self.bot.set_user(user_id, guild_id, marry=int(member.id))
+            await self.bot.say("{} you'd marry {}".format(ctx.message.author.mention, member.display_name))
 
     @utils.cmd_error_handler
     @fmk.command(pass_context=True)
@@ -71,6 +73,7 @@ class FMK():
             await self.bot.say(msg)
         else:
             await self.bot.set_user(user_id, guild_id, kill=int(member.id))
+            await self.bot.say("{} you'd kill {}".format(ctx.message.author.mention, member.display_name))
 
 def setup(bot):
     bot.add_cog(FMK(bot))
