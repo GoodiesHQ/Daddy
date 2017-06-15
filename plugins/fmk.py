@@ -27,7 +27,7 @@ class FMK():
 
         # target is either user-defined or the author of the message
         target = member or ctx.message.author
-        user = await self.bot.get_user(target.id, ctx.message.server.id) or dict()
+        user = await self.bot.get_user(target.id, ctx.message.server.id)
 
         # create the embedded data
         embed = discord.Embed(title=target.display_name, color=discord.Color(0xCF7F07))
@@ -48,7 +48,7 @@ class FMK():
         if msg:
             await self.bot.say(msg)
         else:
-            await self,bot.set_user(ctx.message.author.id, ctx.message.server.id, fuck=int(member.id))
+            await self.bot.set_user(user_id, guild_id, fuck=int(member.id))
 
     @utils.cmd_error_handler
     @fmk.command(pass_context=True)
@@ -59,7 +59,7 @@ class FMK():
         if msg:
             await self.bot.say(msg)
         else:
-            await self.bot.set_user(ctx.message.author.id, ctx.message.server.id, marry=int(member.id))
+            await self.bot.set_user(user_id, guild_id, marry=int(member.id))
 
     @utils.cmd_error_handler
     @fmk.command(pass_context=True)
@@ -70,7 +70,7 @@ class FMK():
         if msg:
             await self.bot.say(msg)
         else:
-            await self.bot.set_user(ctx.message.author.id, ctx.message.server.id, kill=int(member.id))
+            await self.bot.set_user(user_id, guild_id, kill=int(member.id))
 
 def setup(bot):
     bot.add_cog(FMK(bot))

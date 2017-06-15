@@ -32,7 +32,7 @@ class MongoBot(commands.Bot):
             return True
         try:
             user = await self.get_user(user_id, guild_id)
-            if user is None:
+            if not user:
                 await self.db.data.insert_one({"user_id": int(user_id), "guild_id": int(guild_id), **kwargs})
             else:
                 await self.db.data.update_one(user, {"$set": kwargs})
