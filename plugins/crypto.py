@@ -37,11 +37,11 @@ class Exchange():
         urls = [self.create_url(s, d) for s, d in exch]
         responses = await utils.http_multiget(*urls, loop=self.bot.loop)
 
-        for ((s, d), (status, text)) in zip(exch, responses):
-            if status != 200:
+        for ((s, d), response) in zip(exch, responses):
+            if response.status != 200:
                 continue
             try:
-                resp = json.loads(text)
+                resp = json.loads(await response.text())
             except:
                 continue
             if resp["success"] != True:
