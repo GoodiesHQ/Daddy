@@ -5,7 +5,7 @@ import discord
 import json
 
 class Exchange():
-    """Fuck/Marry/Kill plugin for Daddy"""
+    """Crypto exchange API for Daddy"""
 
     API_URL = "https://api.cryptonator.com/api/ticker/{}-{}"
     DEFAULT_DST = "usd"
@@ -25,6 +25,7 @@ class Exchange():
     # @utils.cmd_error_handler
     @commands.group(pass_context=True, no_pm=True, invoke_without_command=True)
     async def crypto(self, ctx, src:str=None, dst:str=None):
+        await self.bot.send_typing(ctx.message.channel)
         embed = discord.Embed(title="", color=discord.Color(0x41f498))
         exch = self.DEFAULT_EXCH
         send = False
