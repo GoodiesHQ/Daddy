@@ -10,7 +10,7 @@ async def http_get(url, lock=None, timeout=5.0, loop=None, **options):
     lock = lock or asyncio.Lock(loop=loop)
     async with lock:
         async with aiohttp.ClientSession(loop=loop) as client:
-            async with client.get(url, timeout=timeout) as resp:
+            async with client.get(url, timeout=timeout, **options) as resp:
                 await resp.text()
                 return resp
 
